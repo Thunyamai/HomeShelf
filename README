@@ -1,0 +1,27 @@
+โครงสร้างโปรเจกต์ Backend (Node.js + Prisma)
+backend/
+│
+├── controllers/           # จัดการ logic ของ API
+│   ├── authController.js   # ฟีเจอร์สำหรับการลงทะเบียนและเข้าสู่ระบบ
+│   ├── itemController.js   # ฟีเจอร์จัดการสินค้า
+│   ├── shoppingController.js # ฟีเจอร์จัดการ Shopping List
+│   └── roomController.js   # ฟีเจอร์จัดการ Room Categories
+│
+├── routes/                # Routing ของ API
+│   ├── authRoutes.js       # เส้นทางการลงทะเบียนและเข้าสู่ระบบ
+│   ├── itemRoutes.js       # เส้นทางการจัดการสินค้า
+│   ├── shoppingRoutes.js   # เส้นทางการจัดการ Shopping List
+│   └── roomRoutes.js       # เส้นทางการจัดการ Room Categories
+│
+├── middlewares/           # จัดการ middleware เช่น auth
+│   └── authMiddleware.js   # ตรวจสอบ JWT token
+│
+├── prisma/                # ไฟล์ Prisma schema สำหรับการจัดการโครงสร้างฐานข้อมูล
+│   └── schema.prisma
+│
+├── config/                # การตั้งค่าฐานข้อมูลและเซิร์ฟเวอร์
+│   └── dbConfig.js         # การเชื่อมต่อฐานข้อมูล
+│
+├── server.js              # ไฟล์เริ่มต้นเซิร์ฟเวอร์
+├── .env                   # ตัวแปรแวดล้อม
+└── package.json           # รายละเอียดโปรเจกต์และ dependencies

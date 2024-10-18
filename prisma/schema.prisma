@@ -1,14 +1,70 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  houseID     String   @unique
+  createdAt   DateTime @default(now())
+  household   Household @relation(fields: [householdId], references: [id]) 
+  householdId Int      
+}
+
+model Household {
+  id            Int      @id @default(autoincrement())
+  householdName String
+  houseID       String   @unique
+  createdAt     DateTime @default(now())
+  users         User[]   // เชื่อมโยงกับ User
+  rooms         Room[]
+  items         Item[]
+  shoppingLists ShoppingList[]
+}
+
+model Room {
+  id          Int      @id @default(autoincrement())
+  roomName    String
+  household   Household @relation(fields: [householdId], references: [id])
+  householdId Int
+  items       Item[]    // เชื่อมกับสินค้าที่อยู่ในห้องนี้
+  createdAt   DateTime  @default(now())
+  shoppingLists ShoppingList[]
+
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  itemName    String
+  quantity    Int
+  status      StatusItem @default(SUFFICIENT)
+  household   Household @relation(fields: [householdId], references: [id])
+  householdId Int
+  room        Room @relation(fields: [roomId], references: [id])
+  roomId      Int
+  createdAt   DateTime @default(now())
+}
+
+model ShoppingList {
+  id          Int      @id @default(autoincrement())
+  itemName    String
+  quantity    Int
+  status      StatusItem @default(SUFFICIENT)
+  household   Household @relation(fields: [householdId], references: [id])
+  householdId Int
+  roomId      Int
+  room        Room @relation(fields: [roomId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+enum StatusItem {
+  SUFFICIENT
+  NEAR_OUT
+  OUT_OF_STOCK
 }

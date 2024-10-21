@@ -1,5 +1,3 @@
-// controllers/roomController.js
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const Joi = require('joi');
@@ -20,6 +18,18 @@ exports.addRoom = async (req, res) => {
   const { roomName, householdId } = req.body;
 
   try {
+    // ตรวจสอบว่าหมวดหมู่ห้องที่ต้องการเพิ่มมีอยู่แล้วหรือไม่
+    const existingRoom = await prisma.room.findFirst({
+      where: {
+        roomName,
+        householdId,
+      },
+    });
+
+    if (existingRoom) {
+      return res.status(400).json({ message: 'ห้องนี้มีอยู่แล้ว' });
+    }
+
     const room = await prisma.room.create({
       data: {
         roomName,
@@ -32,6 +42,7 @@ exports.addRoom = async (req, res) => {
       room,
     });
   } catch (err) {
+    console.error('Error creating room:', err.message);
     res.status(500).json({ message: 'Error creating room', error: err.message });
   }
 };
@@ -82,7 +93,7 @@ exports.deleteRoom = async (req, res) => {
   }
 };
 
-// แสดงห้องทั้งหมด
+// แสดงห้องทั้งหมดตาม Household ID
 exports.getRoomByhouseholdId = async (req, res) => {
   const { householdId } = req.params;
 
@@ -95,6 +106,6 @@ exports.getRoomByhouseholdId = async (req, res) => {
       result
     });
   } catch (err) {
-    res.status(500).json({ message: 'Error getting all room', error: err.message });
+    res.status(500).json({ message: 'Error getting all rooms', error: err.message });
   }
 };

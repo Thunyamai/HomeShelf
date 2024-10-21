@@ -1,5 +1,3 @@
-// controllers/itemController.js
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const Joi = require('joi');
@@ -15,14 +13,25 @@ const itemSchema = Joi.object({
 
 // เพิ่มสินค้าใหม่ใน Inventory
 exports.addItem = async (req, res) => {
+  console.log("Received a request to add item");
+  
   const { error } = itemSchema.validate(req.body);
   if (error) {
+    console.log("Validation error:", error.details[0].message);
     return res.status(400).json({ message: error.details[0].message });
   }
+
+  // ตรวจสอบ request body
+  console.log("Request body:", req.body);
 
   const { itemName, quantity, status, householdId, roomId } = req.body;
 
   try {
+    // ตรวจสอบการเชื่อมต่อฐานข้อมูลด้วยการดึงข้อมูล (สำหรับ debug)
+    const items = await prisma.item.findMany();
+    console.log("Current items in database before adding new item:", items);
+
+    // เพิ่มสินค้าใหม่ในฐานข้อมูล
     const item = await prisma.item.create({
       data: {
         itemName,
@@ -33,11 +42,16 @@ exports.addItem = async (req, res) => {
       },
     });
 
+    // ตรวจสอบการเพิ่มสินค้าในฐานข้อมูล (สำหรับ debug)
+    const updatedItems = await prisma.item.findMany();
+    console.log("Items in database after adding new item:", updatedItems);
+
     res.status(201).json({
       message: 'เพิ่มสินค้านี้เข้าชั้นวาง เรียบร้อยแล้ว',
       item,
     });
   } catch (err) {
+    console.error('Error adding item:', err.message); 
     res.status(500).json({ message: 'Error adding item', error: err.message });
   }
 };

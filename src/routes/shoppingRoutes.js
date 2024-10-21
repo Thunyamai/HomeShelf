@@ -1,18 +1,18 @@
 const express = require('express');
-const { addItemToShoppingList, updateShoppingListItem, deleteShoppingListItem, getShoppingListbyHouseholdId } = require('../controllers/shoppingController');
+const { addRoom, updateRoom, deleteRoom, getRoomByhouseholdId } = require('../controllers/roomController');
 const authenticateToken = require('../middlewares/authMiddleware');
 const router = express.Router();
 
-// เพิ่มรายการใน Shopping List (ใช้ authenticateToken)
-router.post('/', authenticateToken, addItemToShoppingList);
+// เพิ่มหมวดหมู่ห้องใหม่ (ใช้ authenticateToken)
+router.post('/add', authenticateToken, addRoom);
 
-// แก้ไขรายการใน Shopping List (ใช้ authenticateToken)
-router.patch('/', authenticateToken, updateShoppingListItem);
+// แก้ไขหมวดหมู่ห้อง (ใช้ authenticateToken)
+router.patch('/update', authenticateToken, updateRoom);
 
-// ลบรายการใน Shopping List (ใช้ authenticateToken)
-router.delete('/:itemId', authenticateToken, deleteShoppingListItem);
+// ลบหมวดหมู่ห้อง (ใช้ authenticateToken)
+router.delete('/delete/:roomId', authenticateToken, deleteRoom);
 
-// แสดงรายการใน Shopping List (ใช้ authenticateToken)
-router.get('/:householdId', authenticateToken, getShoppingListbyHouseholdId);
+// แสดงหมวดหมู่ห้อง (ใช้ authenticateToken)
+router.get('/:householdId', authenticateToken, getRoomByhouseholdId);
 
 module.exports = router;

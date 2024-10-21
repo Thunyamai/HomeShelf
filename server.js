@@ -7,6 +7,7 @@ const authRoutes = require("./src/routes/authRoutes");
 const roomRoutes = require("./src/routes/roomRoutes");
 const itemRoutes = require("./src/routes/itemRoutes");
 const shoppingRoutes = require("./src/routes/shoppingRoutes");
+const houseRoutes = require('./src/routes/houseRoutes'); 
 
 dotenv.config();
 connectDB();
@@ -36,6 +37,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/shopping", shoppingRoutes);
+app.use("/api/house", houseRoutes);
+
 
 // เริ่มเซิร์ฟเวอร์
 const PORT = process.env.PORT || 8000;

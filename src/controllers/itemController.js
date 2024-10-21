@@ -32,13 +32,20 @@ exports.addItem = async (req, res) => {
     console.log("Current items in database before adding new item:", items);
 
     // เพิ่มสินค้าใหม่ในฐานข้อมูล
+
+    const statusEnumMap = {
+      "Sufficient": "SUFFICIENT",
+      "Near out": "NEAR_OUT",
+      "Out of stock": "OUT_OF_STOCK",
+    };
+
     const item = await prisma.item.create({
       data: {
         itemName,
-        quantity,
-        status,
-        householdId,
-        roomId,
+        quantity: parseInt(quantity, 10),
+        status: statusEnumMap[status],
+        householdId: parseInt(householdId, 10),
+        roomId: parseInt(roomId, 10),
       },
     });
 
@@ -62,7 +69,7 @@ exports.updateItem = async (req, res) => {
     itemId: Joi.number().integer().required(),
     itemName: Joi.string(),
     quantity: Joi.number().integer().min(0),
-    status: Joi.string().valid('Sufficient', 'Near out', 'Out of stock'),
+    status: Joi.string().valid('SUFFICIENT', 'NEAR_OUT', 'OUT_OF_STOCK'),
     roomId: Joi.number().integer(),
   });
 
